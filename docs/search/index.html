@@ -6,6 +6,7 @@
   <title>孔选仲谈治国理政</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link rel="shortcut icon" href="../kong.png" type="image/x-icon">
 </head>
 
 <body class="bg-slate-50 text-slate-900">
@@ -90,6 +91,12 @@
                 class="rounded-xl border border-slate-200 px-3 py-2 text-sm hover:bg-slate-50"
                 :href="`#item-${it.uid}`"
               >定位</a>
+
+              <a
+                class="rounded-xl border border-slate-200 px-3 py-2 text-sm hover:bg-slate-50"
+                :href="`${it.permalink}`"
+                target="_blank"
+              >源文件</a>
             </div>
           </div>
         </article>

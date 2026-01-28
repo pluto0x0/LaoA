@@ -24,7 +24,8 @@ def read_chunks(filename):
         index = 1
         threshold = 5  # seconds
         chunk = []
-        chunk_start = None
+        chunk_start = None 
+        chunk_idx = 0
         while True:
             if not f.readline().startswith(str(index)):
                 break
@@ -34,10 +35,11 @@ def read_chunks(filename):
             f.readline()
             if index > 1:
                 if start - chunk_end > threshold:
-                    chunks.append({'time': (chunk_start, chunk_end), 'text': chunk2str(chunk)})
+                    chunks.append({'time': (chunk_start, chunk_end), 'index': (chunk_idx, index-1), 'text': chunk2str(chunk)})
                     chunk = []
             if not chunk:
                 chunk_start = start
+                chunk_idx = index
             chunk.append(text.strip())
             chunk_end = end
             index += 1
@@ -45,18 +47,22 @@ def read_chunks(filename):
 
 def main():
     video_dir = 'srt'
-    all = {}
+    all = []
     for root, _, files in os.walk(video_dir):
         for file in files:
             # if file.endswith('.srt') and '_' not in file:
             file_path = os.path.join(root, file)
             chunks = read_chunks(file_path)
             bv = os.path.splitext(file)[0].split('-')[-1]
-            all[bv] = chunks
+            all.append({
+                'bv': bv,
+                'filename': file,
+                'chunks': chunks,
+            })
     
-    with open('public/all_subtitles.json', 'w', encoding='utf-8') as f:
+    with open('docs/all_subtitles.json', 'w', encoding='utf-8') as f:
         json.dump(all, f, ensure_ascii=False, indent=2)
-    with open('public/all_subtitles.min.json', 'w', encoding='utf-8') as f:
+    with open('docs/all_subtitles.min.json', 'w', encoding='utf-8') as f:
         json.dump(all, f, ensure_ascii=False, separators=(',', ':'))
 
 if __name__ == '__main__':

@@ -42,19 +42,20 @@ function app() {
       // { BV: [ {time:[s,e], text}, ... ] } -> [{...}]
       const out = [];
       let uid = 0;
-      for (const [bv, arr] of Object.entries(data || {})) {
-        (arr || []).forEach((x, i) => {
+      for (const arr of (data || [])) {
+        (arr.chunks || []).forEach((x, i) => {
           const start = Number(x.time?.[0] ?? 0);
           const end = Number(x.time?.[1] ?? start);
           const t = Math.max(0, start);
           out.push({
             uid: uid++,
-            bv,
+            bv: arr.bv,
             idxInVideo: i,
             start,
             end,
             text: String(x.text ?? ""),
-            url: `https://www.bilibili.com/video/${bv}/?t=${t - 1}`,
+            url: `https://www.bilibili.com/video/${arr.bv}/?t=${t - 1}`,
+            permalink: `https://github.com/pluto0x0/LaoA/blob/main/srt/${arr.filename}#L${x.index[0]*4-3}-L${x.index[1]*4-1}`
           });
         });
       }
